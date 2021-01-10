@@ -1,0 +1,19 @@
+---
+- name: install docker
+  hosts: debian
+  tasks:
+
+    - name: display distribution
+      debug:
+        var: ansible_facts['distribution']
+
+    - name: install package
+      package:
+        name: docker
+        state: present
+
+    - name: star service et boot
+      service:
+        name: docker
+        state: started
+        enabled: yes

@@ -1,0 +1,33 @@
+---
+- name: play with secrets
+  gather_facts: yes
+  hosts: debian
+  vars:
+    users:
+      - toto
+      - tata
+      - titi
+    userdata:
+      name: tutu
+      description: dev user
+      password: "{{ secret }}"
+
+  tasks:
+  - name: load secret file
+    include_vars:
+      file: secret
+
+  - name: display a secret
+    no_log: true
+    debug:
+      msg : "{{ secret }}"
+
+  - name: display a secret
+    debug:
+      msg : "{{ ansible_facts['distribution'] }}"
+
+  - name: looping users
+    user:
+      name: "{{ item }}"
+      state: present
+    loop: "{{ users }}"

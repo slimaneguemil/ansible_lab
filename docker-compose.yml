@@ -3,19 +3,27 @@ services:
   master:
     container_name: master
     image: acoilier/ubuntu-ansible:latest
+    #build: dockerfile/ansible
     working_dir: /root/workdir
     volumes:
       - ./workdir:/root/workdir
-      - ./config:/etc/ansible
+      - ./config1:/etc/ansible
+      - ./nginx:/home/foo/static-site-src/
     command: tail -f /dev/null
 
   debian:
     container_name: debian
-    image: acoilier/debian-sshd:latest
-  
+    build: dockerfile/debian/8/
+    ports:
+      - "2222:22"
+
   ubuntu:
     container_name: ubuntu
     image: acoilier/ubuntu-sshd:latest
+    ports:
+      - 8080:8080
+      - 80:80
+      - 443:443
 
   centos:
     container_name: centos

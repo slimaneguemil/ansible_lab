@@ -1,0 +1,17 @@
+---
+#- name: Gather etcd facts
+#  hosts: test
+#  tasks:
+#    - setup:
+
+- name: illustration templating
+  hosts: all
+  tasks:
+    - name: Display gather facts
+      debug:
+        var: ansible_facts['default_ipv4']['address']
+
+    - name: example of templating
+      template:
+        src: host.j2
+        dest: /home/host.txt

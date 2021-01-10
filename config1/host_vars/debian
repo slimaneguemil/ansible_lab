@@ -1,0 +1,5 @@
+#host variables for debian
+---
+become_ask_pass: True
+remote_user: root
+remote_password: root

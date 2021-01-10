@@ -1,0 +1,15 @@
+---
+# tasks file for users
+- name: Create users
+  user:
+    name: "{{ item }}"
+    state: present
+  loop: "{{web_users }}"
+
+- name: display passwd content
+  command: "cat /etc/passwd"
+  register: output
+
+- name: display
+  debug:
+    var: output.stdout_lines

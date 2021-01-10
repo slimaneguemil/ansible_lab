@@ -1,0 +1,5 @@
+---
+- name: demonstration of roles
+  hosts: debian
+  roles:
+    - users

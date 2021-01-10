@@ -1,0 +1,10 @@
+---
+- name: demo illustration docker-compose with ansible
+  hosts: localhost
+  connection: local
+  gather_facts: no
+  tasks:
+    - name: Tear down existing services
+      docker_compose:
+        project_src: wordpress
+        state: absent

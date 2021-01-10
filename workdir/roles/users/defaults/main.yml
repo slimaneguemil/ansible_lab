@@ -1,0 +1,6 @@
+---
+# defaults file for users
+web_users:
+  - riri
+  - fifi
+  - loulou

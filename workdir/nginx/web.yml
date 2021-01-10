@@ -1,0 +1,80 @@
+---
+- name: setup nginx
+  hosts: ubuntu
+
+  vars:
+    - server_hostname: localhost
+    - key_size: 4096
+    - passphrase: # Set if you want passphrase
+    - key_type: RSA # Others include DSA, ECC, Ed25519, Ed448, X25519, X448
+    - country_name: KE
+    - email_address: [email protected]
+    - organization_name: Computingforgeeks
+
+  tasks:
+
+    - name: copy openssl config
+      copy:
+        src: openssl/server.cnf
+        dest: /root/server.cnf
+
+    - name: generate keypai and crt with openssh
+      command: openssl req -config server.cnf -x509 -nodes -days 365 -newkey rsa:2048 -keyout /root/example.key -out /root/example.crt
+
+    - name: install pip for python3 # pip3 --version to check
+      apt:
+        name: python3-pip
+        state: present
+
+    - name: pip install pyOpenSSL
+      pip:
+        name: pyOpenSSL
+
+
+    - name: install nginx
+      apt:
+        name: nginx
+        state: present
+        update_cache: yes
+
+    - name: start & enable nginx
+      service:
+        name: nginx
+        state: started
+        #enabled: yes
+
+    - name: disable nginx default website
+      file:
+        path: /etc/nginx/sites-enabled/default
+        state: absent
+
+    - name: Deploy web config file
+      template:
+        src: templates/nginxconf_ssl.j2
+        dest: /etc/nginx/sites-available/vproapp
+
+    - name: copy the content of the web site
+      copy:
+        src: /home/foo/static-site-src/
+        dest: /home/foo/static-site
+
+
+#    - name: start & enable nginx
+#      service:
+#        name: nginx
+#        state: started
+        #enabled: yes
+
+    - name: create symlink
+      file:
+        src: /etc/nginx/sites-available/vproapp
+        dest: /etc/nginx/sites-enabled/vproapp
+        state: link
+      notify:
+        - restart Nginx
+
+  handlers:
+    - name: restart Nginx
+      service:
+        name: nginx
+        state: restarted

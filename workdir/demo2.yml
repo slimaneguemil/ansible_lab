@@ -1,0 +1,19 @@
+---
+- name: example create users
+  hosts: debian
+  vars:
+    username: toto
+    userdata:
+      name: tutu
+      description: dev user
+  tasks:
+    - name: task  1
+      user:
+        name: "{{ username }}"
+        state: present
+
+
+    - name: task  2
+      user:
+        name: "{{ userdata['name'] }}"
+        state: present
